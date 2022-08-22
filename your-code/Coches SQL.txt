@@ -1,0 +1,161 @@
+create database concesionario;
+
+
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mecagoenturaza
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema concesionario
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema concesionario
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `concesionario` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `concesionario` ;
+
+-- -----------------------------------------------------
+-- Table `concesionario`.`Coches`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `concesionario`.`Coches` (
+  `VIN` VARCHAR(20) NOT NULL,
+  `Fabricante` VARCHAR(40) NOT NULL,
+  `Modelo` VARCHAR(40) NOT NULL,
+  `Año` YEAR NOT NULL,
+  `Color` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`VIN`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `concesionario`.`Comprador`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `concesionario`.`Comprador` (
+  `DNI` CHAR(9) NOT NULL,
+  `Nombre` VARCHAR(40) NOT NULL,
+  `Telefono` VARCHAR(20) NOT NULL,
+  `Email` VARCHAR(40) NOT NULL,
+  `Direccion` VARCHAR(80) NOT NULL,
+  `Ciudad` VARCHAR(40) NOT NULL,
+  `Provincia` VARCHAR(40) NOT NULL,
+  `Pais` VARCHAR(40) NOT NULL,
+  `CP` VARCHAR(40) NOT NULL,
+  PRIMARY KEY (`DNI`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `concesionario`.`Vendedor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `concesionario`.`Vendedor` (
+  `ID` SMALLINT NOT NULL,
+  `Nombre` VARCHAR(40) NOT NULL,
+  `Tienda` VARCHAR(40) NOT NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `concesionario`.`Factura`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `concesionario`.`Factura` (
+  `Nº ID` INT NOT NULL,
+  `Fecha` DATETIME NOT NULL,
+  `Coches_VIN` CHAR(20) NOT NULL,
+  `Vendedor_ID` SMALLINT NOT NULL,
+  `Comprador_DNI` CHAR(9) NOT NULL,
+  PRIMARY KEY (`Nº ID`),
+  UNIQUE INDEX `Nº ID_UNIQUE` (`Nº ID` ASC) VISIBLE,
+  INDEX `fk_Factura_Coches_idx` (`Coches_VIN` ASC) VISIBLE,
+  INDEX `fk_Factura_Vendedor1_idx` (`Vendedor_ID` ASC) VISIBLE,
+  INDEX `fk_Factura_Comprador1_idx` (`Comprador_DNI` ASC) VISIBLE,
+  CONSTRAINT `fk_Factura_Coches`
+    FOREIGN KEY (`Coches_VIN`)
+    REFERENCES `concesionario`.`Coches` (`VIN`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Factura_Vendedor1`
+    FOREIGN KEY (`Vendedor_ID`)
+    REFERENCES `concesionario`.`Vendedor` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Factura_Comprador1`
+    FOREIGN KEY (`Comprador_DNI`)
+    REFERENCES `concesionario`.`Comprador` (`DNI`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+
+
+
+insert into coches (VIN, Fabricante, Modelo, Año, Color)
+values ('3K096I98581DHSNUP', 'Volkswagen', 'Tiguan', 2019, 'Blue');
+insert into coches (VIN, Fabricante, Modelo, Año, Color)
+values ('ZM8G7BEUQZ97IH46V','Peugeot', 'Rifter', 2019, 'Red');
+insert into coches (VIN, Fabricante, Modelo, Año, Color)
+values ('RKXVNNIHLVVZOUB4M','Ford', 'Fusion', 2018, 'White');
+insert into coches (VIN, Fabricante, Modelo, Año, Color)
+values ('HKNDGS7CU31E9Z7JW','Toyota', 'RAV4', 2018, 'Silver');
+insert into coches (VIN, Fabricante, Modelo, Año, Color)
+values ('DAM41UDN3CHU2WVF6','Volvo', 'V60', 2019, 'Gray');
+
+insert into comprador (DNI, Nombre, Telefono, Email, Direccion, Ciudad, Provincia, Pais, CP)
+values (10001, "Pablo Picasso",	"+34 636 17 63 82",	'-', "Paseo de la Chopera, 14",	'Madrid', 'Madrid', 'Spain', 28045);
+insert into comprador (DNI, Nombre, Telefono, Email, Direccion, Ciudad, Provincia, Pais, CP)
+values (20001, "Hedy Lamarr", "+43 1 514442250", '-', "Weiglgasse 10", 'Viena',	'Vienna', 'Austria', 1150);
+insert into comprador (DNI, Nombre, Telefono, Email, Direccion, Ciudad, Provincia, Pais, CP)
+values (30001, "Katherine Johnson",	"+1 202 358 0000",	'-', "300 E St SW",  "Washington, DC",	'Washington', "United States", 20546);
+
+insert into vendedor (ID, Nombre, Tienda)
+values (00001, "Petey Cruiser",	'Madrid');
+insert into vendedor (ID, Nombre, Tienda)
+values (00002, "Anna Sthesia", 'Barcelona');
+insert into vendedor (ID, Nombre, Tienda)
+values (00003, "Paul Molive", 'Berlin');
+insert into vendedor (ID, Nombre, Tienda)
+values (00004, "Gail Forcewind", 'Paris');
+insert into vendedor (ID, Nombre, Tienda)
+values (00005, "Paige Turner", 'Mimia');
+insert into vendedor (ID, Nombre, Tienda)
+values (00006, "Bob Frapples", "Mexico City");
+insert into vendedor (ID, Nombre, Tienda)
+values (00007, "Walter Melon", 'Amsterdam');
+insert into vendedor (ID, Nombre, Tienda)
+values (00008, "Shonda Leer", "São Paulo");
+
+insert into factura (`Nº ID`, Fecha, Coches_VIN, Vendedor_ID, Comprador_DNI)
+values (852399038, "2018-08-22", "3K096I98581DHSNUP", 00004, 20001);
+insert into factura (`Nº ID`, Fecha, Coches_VIN, Vendedor_ID, Comprador_DNI)
+values (731166526, "2018-12-31", "HKNDGS7CU31E9Z7JW", 00006, 10001);
+insert into factura (`Nº ID`, Fecha, Coches_VIN, Vendedor_ID, Comprador_DNI)
+values (271135104, "2019-01-22", "RKXVNNIHLVVZOUB4M", 00008, 30001);
+
+UPDATE comprador 
+    SET Email = "ppicasso@gmail.com"
+    WHERE DNI = "10001";
+UPDATE comprador 
+    SET Email = "lamarr_hd@hollywood.com"
+    WHERE DNI = "20001";
+UPDATE comprador 
+    SET Email = "lamarr_hd@hello@nasa.gov.com"
+    WHERE DNI = "30001";
+
+UPDATE vendedor 
+    SET Tienda = "Miami"
+    WHERE ID = "5";
+
+DELETE FROM coches
+WHERE VIN = "DAM41UDN3CHU2WVF6";
