@@ -1,0 +1,1 @@
+delete from Ventas_coches where VIN = 'DAM41UDN3CHU2WVF6';
