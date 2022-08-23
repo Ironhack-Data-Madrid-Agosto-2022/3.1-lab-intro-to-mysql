@@ -18,6 +18,18 @@ CREATE SCHEMA IF NOT EXISTS `lab_cars_mysql` DEFAULT CHARACTER SET utf8mb4 COLLA
 USE `lab_cars_mysql` ;
 
 -- -----------------------------------------------------
+-- Table `lab_cars_mysql`.`SALESPERSON`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `lab_cars_mysql`.`SALESPERSON` (
+  `STAFF_INDEX` INT NOT NULL,
+  `NAME` VARCHAR(45) NULL,
+  `STORE` VARCHAR(45) NULL,
+  `STAFF_ID` VARCHAR(45) NULL,
+  PRIMARY KEY (`STAFF_INDEX`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `lab_cars_mysql`.`CAR`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `lab_cars_mysql`.`CAR` (
@@ -50,44 +62,31 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `lab_cars_mysql`.`SALESPERSON`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `lab_cars_mysql`.`SALESPERSON` (
-  `STAFF_INDEX` INT NOT NULL,
-  `NAME` VARCHAR(45) NULL,
-  `STORE` VARCHAR(45) NULL,
-  `STAFF_ID` VARCHAR(45) NULL,
-  PRIMARY KEY (`STAFF_INDEX`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `lab_cars_mysql`.`Invoice`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `lab_cars_mysql`.`Invoice` (
   `INVOICE_ID` INT NOT NULL,
   `DATE` DATE NOT NULL,
-  `INVOICE_NUMBER` VARCHAR(45) NULL,
-  `CAR_ID_INDEX` VARCHAR(45) NOT NULL,
-  `CUSTOMER_CUSTOMER_INDEX` INT NOT NULL,
-  `SALESPERSON_STAFF_INDEX` INT NOT NULL,
-  PRIMARY KEY (`INVOICE_ID`, `CAR_ID_INDEX`, `CUSTOMER_CUSTOMER_INDEX`, `SALESPERSON_STAFF_INDEX`),
-  INDEX `fk_Invoice_CAR_idx` (`CAR_ID_INDEX` ASC) VISIBLE,
+  `SALESPERSON_STAFF_ID` INT NOT NULL,
+  `CAR_ID` VARCHAR(45) NOT NULL,
+  `CUSTOMER_CUSTOMER_INDEX` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`INVOICE_ID`),
+  INDEX `fk_Invoice_SALESPERSON1_idx` (`SALESPERSON_STAFF_ID` ASC) VISIBLE,
+  INDEX `fk_Invoice_CAR1_idx` (`CAR_ID` ASC) VISIBLE,
   INDEX `fk_Invoice_CUSTOMER1_idx` (`CUSTOMER_CUSTOMER_INDEX` ASC) VISIBLE,
-  INDEX `fk_Invoice_SALESPERSON1_idx` (`SALESPERSON_STAFF_INDEX` ASC) VISIBLE,
-  CONSTRAINT `fk_Invoice_CAR`
-    FOREIGN KEY (`CAR_ID_INDEX`)
+  CONSTRAINT `fk_Invoice_SALESPERSON1`
+    FOREIGN KEY (`SALESPERSON_STAFF_ID`)
+    REFERENCES `lab_cars_mysql`.`SALESPERSON` (`STAFF_INDEX`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Invoice_CAR1`
+    FOREIGN KEY (`CAR_ID`)
     REFERENCES `lab_cars_mysql`.`CAR` (`ID_INDEX`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Invoice_CUSTOMER1`
     FOREIGN KEY (`CUSTOMER_CUSTOMER_INDEX`)
-    REFERENCES `lab_cars_mysql`.`CUSTOMER` (`CUSTOMER_INDEX`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Invoice_SALESPERSON1`
-    FOREIGN KEY (`SALESPERSON_STAFF_INDEX`)
-    REFERENCES `lab_cars_mysql`.`SALESPERSON` (`STAFF_INDEX`)
+    REFERENCES `lab_cars_mysql`.`CUSTOMER` (`CUSTOMER_ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
