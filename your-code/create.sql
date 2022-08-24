@@ -149,99 +149,23 @@ CREATE TABLE IF NOT EXISTS `publications`.`pub_info` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Table `publications`.`titles`
+-- Schema mydb
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `publications`.`titles` (
-  `title_id` VARCHAR(6) NOT NULL,
-  `title` VARCHAR(80) NOT NULL,
-  `type` CHAR(12) NOT NULL,
-  `pub_id` CHAR(4) NULL DEFAULT NULL,
-  `price` DECIMAL(19,4) NULL DEFAULT NULL,
-  `advance` DECIMAL(19,4) NULL DEFAULT NULL,
-  `royalty` INT NULL DEFAULT NULL,
-  `ytd_sales` INT NULL DEFAULT NULL,
-  `notes` VARCHAR(200) NULL DEFAULT NULL,
-  `pubdate` DATETIME NOT NULL,
-  PRIMARY KEY (`title_id`),
-  INDEX `titles_pub_id` (`pub_id` ASC) VISIBLE,
-  CONSTRAINT `titles_ibfk_1`
-    FOREIGN KEY (`pub_id`)
-    REFERENCES `publications`.`publishers` (`pub_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
+-- -----------------------------------------------------
+-- Schema 3.1-lab
+-- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Table `publications`.`roysched`
+-- Schema 3.1-lab
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `publications`.`roysched` (
-  `title_id` VARCHAR(6) NOT NULL,
-  `lorange` INT NULL DEFAULT NULL,
-  `hirange` INT NULL DEFAULT NULL,
-  `royalty` INT NULL DEFAULT NULL,
-  INDEX `roysched_title_id` (`title_id` ASC) VISIBLE,
-  CONSTRAINT `roysched_ibfk_1`
-    FOREIGN KEY (`title_id`)
-    REFERENCES `publications`.`titles` (`title_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
--- Table `publications`.`sales`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `publications`.`sales` (
-  `stor_id` CHAR(4) NOT NULL,
-  `ord_num` VARCHAR(20) NOT NULL,
-  `ord_date` DATETIME NOT NULL,
-  `qty` SMALLINT NOT NULL,
-  `payterms` VARCHAR(12) NOT NULL,
-  `title_id` VARCHAR(6) NOT NULL,
-  PRIMARY KEY (`stor_id`, `ord_num`, `title_id`),
-  INDEX `sales_title_id` (`title_id` ASC) VISIBLE,
-  CONSTRAINT `sales_ibfk_1`
-    FOREIGN KEY (`stor_id`)
-    REFERENCES `publications`.`stores` (`stor_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `sales_ibfk_2`
-    FOREIGN KEY (`title_id`)
-    REFERENCES `publications`.`titles` (`title_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
--- Table `publications`.`titleauthor`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `publications`.`titleauthor` (
-  `au_id` VARCHAR(11) NOT NULL,
-  `title_id` VARCHAR(6) NOT NULL,
-  `au_ord` TINYINT NULL DEFAULT NULL,
-  `royaltyper` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`au_id`, `title_id`),
-  INDEX `titleauthor_title_id` (`title_id` ASC) VISIBLE,
-  CONSTRAINT `titleauthor_ibfk_1`
-    FOREIGN KEY (`title_id`)
-    REFERENCES `publications`.`titles` (`title_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `titleauthor_ibfk_2`
-    FOREIGN KEY (`au_id`)
-    REFERENCES `publications`.`authors` (`au_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
+CREATE SCHEMA IF NOT EXISTS `3.1-lab` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 USE `3.1-lab` ;
 
 -- -----------------------------------------------------
@@ -252,19 +176,11 @@ CREATE TABLE IF NOT EXISTS `3.1-lab`.`cars` (
   `marca` VARCHAR(20) NOT NULL,
   `model` VARCHAR(20) NOT NULL,
   `color` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`VIN`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `3.1-lab`.`salesperson`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `3.1-lab`.`salesperson` (
-  `sID` VARCHAR(20) NOT NULL,
-  `name` VARCHAR(20) NOT NULL,
-  `store` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`sID`))
-ENGINE = InnoDB;
+  `ID` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
@@ -279,39 +195,52 @@ CREATE TABLE IF NOT EXISTS `3.1-lab`.`customer` (
   `city` VARCHAR(20) NOT NULL,
   `zip` VARCHAR(20) NOT NULL,
   PRIMARY KEY (`cID`))
-ENGINE = InnoDB;
-cars
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `3.1-lab`.`salesperson`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `3.1-lab`.`salesperson` (
+  `sID` VARCHAR(20) NOT NULL,
+  `name` VARCHAR(20) NOT NULL,
+  `store` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`sID`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
 
 -- -----------------------------------------------------
 -- Table `3.1-lab`.`invoices`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `3.1-lab`.`invoices` (
   `iID` VARCHAR(20) NOT NULL,
-  `name` VARCHAR(20) NULL,
-  `date` VARCHAR(45) NULL,
+  `name` VARCHAR(20) NULL DEFAULT NULL,
+  `date` VARCHAR(45) NULL DEFAULT NULL,
   `salesperson_sID` VARCHAR(20) NOT NULL,
   `customer_cID` VARCHAR(20) NOT NULL,
-  `cars_VIN` VARCHAR(20) NOT NULL,
+  `cars_ID` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`iID`),
   INDEX `fk_invoices_salesperson_idx` (`salesperson_sID` ASC) VISIBLE,
   INDEX `fk_invoices_customer1_idx` (`customer_cID` ASC) VISIBLE,
-  INDEX `fk_invoices_cars1_idx` (`cars_VIN` ASC) VISIBLE,
-  CONSTRAINT `fk_invoices_salesperson`
-    FOREIGN KEY (`salesperson_sID`)
-    REFERENCES `3.1-lab`.`salesperson` (`sID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  INDEX `fk_invoices_cars1_idx` (`cars_ID` ASC) VISIBLE,
   CONSTRAINT `fk_invoices_customer1`
     FOREIGN KEY (`customer_cID`)
-    REFERENCES `3.1-lab`.`customer` (`cID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    REFERENCES `3.1-lab`.`customer` (`cID`),
+  CONSTRAINT `fk_invoices_salesperson`
+    FOREIGN KEY (`salesperson_sID`)
+    REFERENCES `3.1-lab`.`salesperson` (`sID`),
   CONSTRAINT `fk_invoices_cars1`
-    FOREIGN KEY (`cars_VIN`)
-    REFERENCES `3.1-lab`.`cars` (`VIN`)
+    FOREIGN KEY (`cars_ID`)
+    REFERENCES `3.1-lab`.`cars` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
